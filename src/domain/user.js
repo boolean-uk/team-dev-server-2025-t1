@@ -134,6 +134,10 @@ export default class User {
     return User._findMany()
   }
 
+  static async findByCohortId(cohortId) {
+    return User._findMany('cohortId', cohortId)
+  }
+
   static async _findByUnique(key, value) {
     const foundUser = await dbClient.user.findUnique({
       where: {
