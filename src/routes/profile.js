@@ -7,6 +7,6 @@ const router = Router()
 // Need to validate
 router.post('/', validateAuthentication, create)
 router.get('/:id', validateAuthentication, getById)
-router.put('/:id', validateAuthentication, updateById)
+router.patch('/:id', validateAuthentication, updateById)
 
 export default router

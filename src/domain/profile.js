@@ -1,4 +1,4 @@
-import dbClient from '../utils/dbClient'
+import dbClient from '../utils/dbClient.js'
 
 export default class Profile {
   static fromDb(profile) {
