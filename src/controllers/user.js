@@ -3,14 +3,18 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
   const userToCreate = await User.fromJson(req.body)
-
   try {
     const existingUser = await User.findByEmail(userToCreate.email)
+    // eslint-disable-next-line
+    const regex = /(?=.*[a-z])(?=.*[A-Z{1,}])(?=.*[0-9{1,}])(?=.*[!-\/:-@[-`{-~{1,}]).{8,}/
 
     if (existingUser) {
       return sendDataResponse(res, 400, { email: 'Email already in use' })
     }
 
+    if (!regex.test(req.body.password)) {
+      return sendDataResponse(res, 400, { email: 'Invalid password' })
+    }
     const createdUser = await userToCreate.save()
 
     return sendDataResponse(res, 201, createdUser)
