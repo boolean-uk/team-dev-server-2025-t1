@@ -7,6 +7,7 @@ import cors from 'cors'
 import userRouter from './routes/user.js'
 import postRouter from './routes/post.js'
 import authRouter from './routes/auth.js'
+import profileRouter from './routes/profile.js'
 import cohortRouter from './routes/cohort.js'
 import deliveryLogRouter from './routes/deliveryLog.js'
 
@@ -21,6 +22,7 @@ const docFile = fs.readFileSync('./docs/openapi.yml', 'utf8')
 const swaggerDoc = YAML.parse(docFile)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
+app.use('/profile', profileRouter)
 app.use('/users', userRouter)
 app.use('/posts', postRouter)
 app.use('/cohorts', cohortRouter)
