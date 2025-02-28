@@ -32,10 +32,19 @@ export const getAllByUserId = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  const foundPosts = (await Post.findAll()).map((post) => {
-    return { ...post.toJson().post }
-  })
+  // eslint-disable-next-line prettier/prettier
+  const foundPosts = await Post.findAll()
+  const formattedPosts = await foundPosts.map(
+    async (post) => await post.toJson()
+  )
+
+  const bestPosts = []
+  for (const post of formattedPosts) {
+    bestPosts.push(await post)
+  }
+
+  console.log(bestPosts)
   return sendDataResponse(res, 200, {
-    posts: foundPosts
+    posts: bestPosts
   })
 }

@@ -1,4 +1,5 @@
 import dbClient from '../utils/dbClient.js'
+import User from './user.js'
 
 export default class Post {
   static fromDb(post) {
@@ -24,11 +25,13 @@ export default class Post {
     this.updatedAt = updatedAt
   }
 
-  toJson() {
+  async toJson() {
+    const user = await User.findById(this.userId)
     return {
       post: {
         id: this.id,
         userId: this.userId,
+        author: { firstName: user.firstName, lastName: user.lastName },
         content: this.content,
         createdAt: this.createdAt,
         updatedAt: this.updatedAt
