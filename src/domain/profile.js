@@ -65,6 +65,26 @@ export default class Profile {
     return Profile.fromDb(createdProfile)
   }
 
+  async update(profile) {
+    const data = {
+      id: profile.id,
+      userId: profile.userId,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      bio: profile.bio,
+      githubUrl: profile.githubUrl
+    }
+
+    const updatedProfile = await dbClient.profile.update({
+      data,
+      where: {
+        id: profile.id
+      }
+    })
+
+    return Profile.fromDb(updatedProfile)
+  }
+
   static async findById(id) {
     return Profile._findByUnique('id', id)
   }

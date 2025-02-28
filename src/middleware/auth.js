@@ -51,6 +51,40 @@ export async function validateAuthentication(req, res, next) {
   next()
 }
 
+export async function getUserIdFromToken(req, res, next) {
+  const header = req.header('authorization')
+
+  if (!header) {
+    return sendDataResponse(res, 401, {
+      authorization: 'Missing Authorization header'
+    })
+  }
+
+  const [type, token] = header.split(' ')
+
+  const isTypeValid = validateTokenType(type)
+  if (!isTypeValid) {
+    return sendDataResponse(res, 401, {
+      authentication: `Invalid token type, expected Bearer but got ${type}`
+    })
+  }
+
+  const isTokenValid = validateToken(token)
+  if (!isTokenValid) {
+    return sendDataResponse(res, 401, {
+      authentication: 'Invalid or missing access token'
+    })
+  }
+
+  const decodedToken = jwt.decode(token)
+  const foundUser = await User.findById(decodedToken.userId)
+  req.userId = foundUser.id
+  req.userRole = foundUser.role
+  delete foundUser.passwordHash
+
+  next()
+}
+
 function validateToken(token) {
   if (!token) {
     return false
