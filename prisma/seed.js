@@ -34,8 +34,12 @@ async function seed() {
 async function createPost(userId, content) {
   const post = await prisma.post.create({
     data: {
-      userId,
-      content
+      userId: userId,
+      content: content,
+      // likes: [],
+      // comments: [],
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     include: {
       user: true
@@ -81,6 +85,8 @@ async function createUser(
           githubUrl
         }
       }
+      // comments: [],
+      // likes: []
     },
     include: {
       profile: true

@@ -6,15 +6,21 @@ export const create = async (req, res) => {
   try {
     const existingUser = await User.findByEmail(userToCreate.email)
     // eslint-disable-next-line
-    const regex = /(?=.*[a-z])(?=.*[A-Z{1,}])(?=.*[0-9{1,}])(?=.*[!-\/:-@[-`{-~{1,}]).{8,}/
+    const passwordRegex = /(?=.*[a-z])(?=.*[A-Z{1,}])(?=.*[0-9{1,}])(?=.*[!-\/:-@[-`{-~{1,}]).{8,}/
+    const emailRegex = /[^@]{1,}[@]{1}[^@]{1,}/
 
     if (existingUser) {
       return sendDataResponse(res, 400, { email: 'Email already in use' })
     }
 
-    if (!regex.test(req.body.password)) {
-      return sendDataResponse(res, 400, { email: 'Invalid password' })
+    if (!passwordRegex.test(req.body.password)) {
+      return sendDataResponse(res, 400, { password: 'Invalid password' })
     }
+
+    if (!emailRegex.test(req.body.email)) {
+      return sendDataResponse(res, 400, { email: 'Invalid email' })
+    }
+
     const createdUser = await userToCreate.save()
 
     return sendDataResponse(res, 201, createdUser)
@@ -50,6 +56,19 @@ export const getAll = async (req, res) => {
   } else {
     foundUsers = await User.findAll()
   }
+
+  const formattedUsers = foundUsers.map((user) => {
+    return {
+      ...user.toJSON().user
+    }
+  })
+
+  return sendDataResponse(res, 200, { users: formattedUsers })
+}
+
+export const getAllByCohortId = async (req, res) => {
+  const cohortId = parseInt(req.params.id)
+  const foundUsers = await User.findByCohortId(cohortId)
 
   const formattedUsers = foundUsers.map((user) => {
     return {

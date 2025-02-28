@@ -68,7 +68,7 @@ export default class User {
     return {
       user: {
         id: this.id,
-        cohort_id: this.cohortId,
+        cohortId: this.cohortId,
         role: this.role,
         firstName: this.firstName,
         lastName: this.lastName,
@@ -153,6 +153,22 @@ export default class User {
     return User._findMany()
   }
 
+  static async findByCohortId(cohortId) {
+    const key = 'cohortId'
+    const value = cohortId
+    const query = {}
+
+    if (key !== undefined && value !== undefined) {
+      query.where = {
+        [key]: value
+      }
+    }
+
+    const foundUsers = await dbClient.user.findMany(query)
+
+    return foundUsers.map((user) => User.fromDb(user))
+  }
+
   static async _findByUnique(key, value) {
     const foundUser = await dbClient.user.findUnique({
       where: {
@@ -176,7 +192,6 @@ export default class User {
         profile: true
       }
     }
-
     if (key !== undefined && value !== undefined) {
       query.where = {
         profile: {
