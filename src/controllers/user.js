@@ -61,11 +61,26 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
+  // eslint-disable-next-line camelcase
+  const { cohortId: cohort_id } = req.body
+  const { role } = req.body
+  const userId = parseInt(req.params.id)
+  const userToUpdate = await User.findById(userId)
 
-  if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+  try {
+    if (!userToUpdate) {
+      return sendDataResponse(res, 400, {
+        cohort_id: 'No cohort found',
+        role: 'No role found'
+      })
+    }
+    // eslint-disable-next-line camelcase
+    userToUpdate.cohortId = cohort_id
+    userToUpdate.role = role
+    const updatedUser = await userToUpdate.update(userToUpdate)
+
+    return sendDataResponse(res, 201, updatedUser)
+  } catch (error) {
+    return sendMessageResponse(res, 500, 'Unable to update user')
   }
-
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
 }
