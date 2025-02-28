@@ -3,6 +3,7 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 export const create = async (req, res) => {
   const userToCreate = await User.fromJson(req.body)
+  console.log(res)
   try {
     const existingUser = await User.findByEmail(userToCreate.email)
     // eslint-disable-next-line
@@ -67,8 +68,9 @@ export const getAll = async (req, res) => {
 }
 
 export const getAllByCohortId = async (req, res) => {
-  const { cohort_Id: cohortId } = req.query
-
+  // const { cohort_id: cohortId } = req.query
+  // console.log('req.query ', req.query)
+  const cohortId = parseInt(req.params.id)
   const foundUsers = await User.findByCohortId(cohortId)
 
   const formattedUsers = foundUsers.map((user) => {
@@ -87,5 +89,5 @@ export const updateById = async (req, res) => {
     return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
   }
 
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
+  return sendDataResponse(res, 201, { user: { cohortId: cohortId } })
 }
