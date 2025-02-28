@@ -68,8 +68,6 @@ export const getAll = async (req, res) => {
 }
 
 export const getAllByCohortId = async (req, res) => {
-  // const { cohort_id: cohortId } = req.query
-  // console.log('req.query ', req.query)
   const cohortId = parseInt(req.params.id)
   const foundUsers = await User.findByCohortId(cohortId)
 
