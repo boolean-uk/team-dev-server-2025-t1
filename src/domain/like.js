@@ -83,17 +83,13 @@ export default class Like {
   static async _findMany(key, value) {
     const query = {
       include: {
-        post: true,
-        user: true
+        post: true
       }
     }
 
     if (key && value) {
       query.where = {
         post: {
-          [key]: value
-        },
-        user: {
           [key]: value
         }
       }
