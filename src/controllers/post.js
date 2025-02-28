@@ -13,9 +13,9 @@ export const create = async (req, res) => {
   if (!User.findById(postToCreate.userId))
     return sendDataResponse(res, 400, { content: 'No user with ID' })
 
-  // if (!postToCreate.content) {
-  //   return sendDataResponse(res, 400, { content: 'Must provide content' })
-  // }
+  if (!postToCreate.content) {
+    return sendDataResponse(res, 400, { content: 'Must provide content' })
+  }
 
   const createdPost = await postToCreate.save()
 
