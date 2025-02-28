@@ -173,7 +173,6 @@ export default class User {
         profile: true
       }
     }
-    console.log('key: ', key, 'value: ', value)
     if (key !== undefined && value !== undefined) {
       query.where = {
         profile: {
