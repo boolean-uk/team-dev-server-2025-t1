@@ -66,6 +66,19 @@ export const getAll = async (req, res) => {
   return sendDataResponse(res, 200, { users: formattedUsers })
 }
 
+export const getAllByCohortId = async (req, res) => {
+  const cohortId = parseInt(req.params.id)
+  const foundUsers = await User.findByCohortId(cohortId)
+
+  const formattedUsers = foundUsers.map((user) => {
+    return {
+      ...user.toJSON().user
+    }
+  })
+
+  return sendDataResponse(res, 200, { users: formattedUsers })
+}
+
 export const updateById = async (req, res) => {
   const { cohort_id: cohortId } = req.body
 
@@ -73,5 +86,5 @@ export const updateById = async (req, res) => {
     return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
   }
 
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
+  return sendDataResponse(res, 201, { user: { cohortId: cohortId } })
 }
